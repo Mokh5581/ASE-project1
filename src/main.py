@@ -20,8 +20,8 @@ def main():
     gdf_lstat3      = m1.count_plz_occurrences(df_lstat2)  # Counts charging stations per PLZ
     df_residents    = pd.read_csv(pdict["file_residents"])  # Population data by PLZ
     gdf_residents2  = m1.preprop_resid(df_residents, df_geodat_plz, pdict)  # Preprocessed population data
-    df_reports = pd.read_csv("./charging/infrastructure/repositories/malfunction_reports.csv", delimiter=";", encoding='utf-8')
-    df_suggestions = pd.read_csv("./charging/infrastructure/repositories/suggestions.csv", delimiter=";", encoding='utf-8')
+    df_reports = pd.read_csv(pdict["file_reports"], delimiter=";", encoding='utf-8')
+    df_suggestions = pd.read_csv(pdict["file_suggestions"], delimiter=";", encoding='utf-8')
     # try:
     #     df_suggestions = pd.read_csv("./community/suggestions.csv", delimiter=";", encoding='utf-8')
     # except FileNotFoundError:
