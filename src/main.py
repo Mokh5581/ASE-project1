@@ -65,7 +65,7 @@ def render_search_page(df_lstat):
     if postal_code:
         st.write(f"Searching for postal code: {postal_code}")
         stations = search_service.search_by_postal_code(postal_code)
-        st.write("Filtered data:")
+        st.write(f"those are the stations in postal code :{postal_code}")
         st.write(pd.DataFrame(stations).head())
         print("station are as follow" )
         print(stations)
