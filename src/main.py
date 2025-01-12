@@ -69,7 +69,7 @@ def render_search_page(df_lstat):
         st.write(pd.DataFrame(stations).head())
         print("station are as follow" )
         print(stations)
-        # st.write("Debug - Stations Data:", stations)  # Debug output
+        # st.write("Debug - Stations Data:", stations)   # Debug output
         if stations:
             m = folium.Map(location=[52.5200, 13.4050], zoom_start=12)
             for station in stations:
