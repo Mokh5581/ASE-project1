@@ -29,18 +29,19 @@ def main():
     gdf_lstat3      = m1.count_plz_occurrences(df_lstat2)  # Counts charging stations per PLZ
     df_residents    = pd.read_csv(pdict["file_residents"])  # Population data by PLZ
     gdf_residents2  = m1.preprop_resid(df_residents, df_geodat_plz, pdict)  # Preprocessed population data
-
-    try:
-        df_suggestions = pd.read_csv("./community/suggestions.csv", delimiter=";", encoding='utf-8')
-    except FileNotFoundError:
-        df_suggestions = pd.DataFrame(columns=["postal_code", "address", "comments"])
-        df_suggestions.to_csv("./community/suggestions.csv", sep=";", index=False)
-
-    try:
-        df_reports = pd.read_csv("./feedback/malfunction_reports.csv", delimiter=";", encoding='utf-8')
-    except FileNotFoundError:
-        df_reports = pd.DataFrame(columns=["station_name", "report_description"])
-        df_reports.to_csv("./feedback/malfunction_reports.csv", sep=";", index=False)
+    df_reports = pd.read_csv("./charging/infrastructure/repositories/malfunction_reports.csv", delimiter=";", encoding='utf-8')
+    df_suggestions = pd.read_csv("./charging/infrastructure/repositories/suggestions.csv", delimiter=";", encoding='utf-8')
+    # try:
+    #     df_suggestions = pd.read_csv("./community/suggestions.csv", delimiter=";", encoding='utf-8')
+    # except FileNotFoundError:
+    #     df_suggestions = pd.DataFrame(columns=["postal_code", "address", "comments"])
+    #     df_suggestions.to_csv("./community/suggestions.csv", sep=";", index=False)
+    #
+    # try:
+    #      df_reports = pd.read_csv("./feedback/malfunction_reports.csv", delimiter=";", encoding='utf-8')
+    # except FileNotFoundError:
+    #     df_reports = pd.DataFrame(columns=["station_name", "report_description"])
+    #     df_reports.to_csv("./feedback/malfunction_reports.csv", sep=";", index=False)
     # page = st.sidebar.selectbox("Choose a feature:", ["Home", "Search by Postal Code"])
     page = st.sidebar.selectbox("Choose a feature:",
                                 ["Home", "Search by Postal Code", "Submit Suggestions", "Report Malfunction",
@@ -113,7 +114,7 @@ def render_submit_suggestion_page(df_suggestions):
         if submitted:
             new_suggestion = pd.DataFrame([{"postal_code": postal_code, "address": address, "comments": comments}])
             df_suggestions = pd.concat([df_suggestions, new_suggestion], ignore_index=True)
-            df_suggestions.to_csv("./community/suggestions.csv", sep=";", index=False)
+            df_suggestions.to_csv("./charging/infrastructure/repositories/suggestions.csv", sep=";", index=False)
             st.success("Your suggestion has been submitted!")
             # new_suggestion = {"postal_code": postal_code, "address": address, "comments": comments}
             # df_suggestions = df_suggestions.ap(new_suggestion, ignore_index=True)
@@ -129,7 +130,7 @@ def render_malfunction_report_page(df_lstat, df_reports):
         if submitted:
             new_report = pd.DataFrame({"station_name": [station_name], "report_description": [report_description]})
             df_reports = pd.concat([df_reports, new_report], ignore_index=True)
-            df_reports.to_csv("./feedback/malfunction_reports.csv", sep=";", index=False)
+            df_reports.to_csv("./charging/infrastructure/repositories/malfunction_reports.csv", sep=";", index=False)
             st.success("Your report has been submitted!")
             # new_report = {"station_name": station_name, "report_description": report_description}
             # df_reports = df_reports.append(new_report, ignore_index=True)
