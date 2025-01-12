@@ -61,7 +61,7 @@ def main():
 def render_search_page(df_lstat):
     """Render the Search by Postal Code page."""
     search_service = SearchService(df_lstat)  # Initialize SearchService with data
-    postal_code = st.text_input("Enter your postal code:", "")
+    postal_code = st.text_input("Enter your postal code :", "")
     if postal_code:
         st.write(f"Searching for postal code: {postal_code}")
         stations = search_service.search_by_postal_code(postal_code)
