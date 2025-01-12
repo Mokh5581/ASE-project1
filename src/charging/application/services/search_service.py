@@ -8,14 +8,15 @@ class SearchService:
     def search_by_postal_code(self, postal_code):
         # Filter dataset for the given postal code
 
-        postal_code = str(postal_code).strip()
+        postal_code = int(float(postal_code))
         print(f'you are trying to search for : {postal_code}')
         print(f'this is the unfiltered df: {self.df_lstat}')
         print("Unique postal codes in the dataset:", self.df_lstat["Postleitzahl"].unique())
 
         # Normalize the postal codes in the dataframe
-        self.df_lstat["Postleitzahl"] = self.df_lstat["Postleitzahl"].astype(str).str.strip()
-        postal_code = str(postal_code).strip()
+        self.df_lstat["Postleitzahl"] = self.df_lstat["Postleitzahl"].fillna(0).astype(int)
+        self.df_lstat["Postleitzahl"] = self.df_lstat["Postleitzahl"].astype(float).astype(int)
+        # postal_code = str(postal_code).strip()
 
         filtered_df = self.df_lstat[self.df_lstat["Postleitzahl"] == postal_code]
 
@@ -26,7 +27,8 @@ class SearchService:
             mag = row["Längengrad"].replace(',','.')
             stations.append({
                 "name": row["Anzeigename (Karte)"],
-                # "status": row["status"],
+                 # "status": row["status"],
+                 "status": "Available",
                  "location": (float(long), float(mag)),
             })
 

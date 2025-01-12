@@ -55,7 +55,7 @@ def main():
     print("Population data processed.")
 
     # Create Streamlit app for visualization
-    m1.make_streamlit_electric_Charging_resid(gdf_lstat3, gdf_residents2)
+    # m1.make_streamlit_electric_Charging_resid(gdf_lstat3, gdf_residents2)
     print("Streamlit app running.")
 
 def render_search_page(df_lstat):
@@ -66,7 +66,7 @@ def render_search_page(df_lstat):
         st.write(f"Searching for postal code: {postal_code}")
         stations = search_service.search_by_postal_code(postal_code)
         st.write(f"those are the stations in postal code :{postal_code}")
-        st.write(pd.DataFrame(stations).head())
+        st.write(pd.DataFrame(stations))
         print("station are as follow" )
         print(stations)
         # st.write("Debug - Stations Data:", stations)   # Debug output
