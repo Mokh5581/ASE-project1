@@ -25,21 +25,41 @@ def main():
     """Main: Generation of Streamlit App for visualizing electric charging stations & residents in Berlin"""
     df_lstat        = pd.read_csv(pdict["file_lstations"], delimiter=";", encoding='utf-8')  # charging stations dataset
     df_geodat_plz   = pd.read_csv(pdict["file_geodat_plz"], delimiter=";")  # Geospatial data for Berlin PLZ
-
     df_lstat2       = m1.preprop_lstat(df_lstat, df_geodat_plz, pdict)  # Preprocessed charging stations
     gdf_lstat3      = m1.count_plz_occurrences(df_lstat2)  # Counts charging stations per PLZ
-
     df_residents    = pd.read_csv(pdict["file_residents"])  # Population data by PLZ
     gdf_residents2  = m1.preprop_resid(df_residents, df_geodat_plz, pdict)  # Preprocessed population data
 
-    page = st.sidebar.selectbox("Choose a feature:", ["Home", "Search by Postal Code"])
-    print(f'this is the column names {df_lstat2.columns}')
+    try:
+        df_suggestions = pd.read_csv("./community/suggestions.csv", delimiter=";", encoding='utf-8')
+    except FileNotFoundError:
+        df_suggestions = pd.DataFrame(columns=["postal_code", "address", "comments"])
+        df_suggestions.to_csv("./community/suggestions.csv", sep=";", index=False)
+
+    try:
+        df_reports = pd.read_csv("./feedback/malfunction_reports.csv", delimiter=";", encoding='utf-8')
+    except FileNotFoundError:
+        df_reports = pd.DataFrame(columns=["station_name", "report_description"])
+        df_reports.to_csv("./feedback/malfunction_reports.csv", sep=";", index=False)
+    # page = st.sidebar.selectbox("Choose a feature:", ["Home", "Search by Postal Code"])
+    page = st.sidebar.selectbox("Choose a feature:",
+                                ["Home", "Search by Postal Code", "Submit Suggestions", "Report Malfunction",
+                                 "View Suggestions", "View Malfunction Reports"])
+    # print(f'this is the column names {df_lstat2.columns}')
 
     if page == "Home":
         # Render home page content
         m1.make_streamlit_electric_Charging_resid(gdf_lstat3, gdf_residents2)
     elif page == "Search by Postal Code":
         render_search_page(df_lstat)
+    elif page == "Submit Suggestions":
+        render_submit_suggestion_page(df_suggestions)
+    elif page == "Report Malfunction":
+        render_malfunction_report_page(df_lstat, df_reports)
+    elif page == "View Suggestions":
+        render_view_suggestions_page(df_suggestions)
+    elif page == "View Malfunction Reports":
+        render_view_malfunction_reports_page(df_reports)
     df_geodat_plz   = pd.read_csv(pdict["file_geodat_plz"], delimiter=";")  # Geospatial data for Berlin PLZ
     print("Geodata for Berlin loaded.")
     print(df_geodat_plz)
@@ -83,6 +103,47 @@ def render_search_page(df_lstat):
         else:
             st.warning("No charging stations found for this postal code.")
 
+def render_submit_suggestion_page(df_suggestions):
+    st.title("Submit Suggestion for New Charging Location")
+    with st.form("suggestion_form"):
+        postal_code = st.text_input("Postal Code")
+        address = st.text_input("Address")
+        comments = st.text_area("Comments")
+        submitted = st.form_submit_button("Submit")
+        if submitted:
+            new_suggestion = pd.DataFrame([{"postal_code": postal_code, "address": address, "comments": comments}])
+            df_suggestions = pd.concat([df_suggestions, new_suggestion], ignore_index=True)
+            df_suggestions.to_csv("./community/suggestions.csv", sep=";", index=False)
+            st.success("Your suggestion has been submitted!")
+            # new_suggestion = {"postal_code": postal_code, "address": address, "comments": comments}
+            # df_suggestions = df_suggestions.ap(new_suggestion, ignore_index=True)
+            # df_suggestions.to_csv("suggestions.csv", sep=";", index=False)
+            # st.success("Your suggestion has been submitted!")
+
+def render_malfunction_report_page(df_lstat, df_reports):
+    st.title("Report Malfunction at Charging Station")
+    with st.form("malfunction_report"):
+        station_name = st.selectbox("Select Charging Station", df_lstat["Anzeigename (Karte)"].unique())
+        report_description = st.text_area("Describe the Malfunction")
+        submitted = st.form_submit_button("Submit")
+        if submitted:
+            new_report = pd.DataFrame({"station_name": [station_name], "report_description": [report_description]})
+            df_reports = pd.concat([df_reports, new_report], ignore_index=True)
+            df_reports.to_csv("./feedback/malfunction_reports.csv", sep=";", index=False)
+            st.success("Your report has been submitted!")
+            # new_report = {"station_name": station_name, "report_description": report_description}
+            # df_reports = df_reports.append(new_report, ignore_index=True)
+            # df_reports.to_csv("malfunction_reports.csv", sep=";", index=False)
+            # st.success("Your report has been submitted!")
+
+
+def render_view_suggestions_page(df_suggestions):
+    st.title("View Suggestions for New Charging Locations")
+    st.dataframe(df_suggestions)
+
+def render_view_malfunction_reports_page(df_reports):
+    st.title("View Malfunction Reports")
+    st.dataframe(df_reports)
 # -----------------------------------------------------------------------------------------------------------------------
 
     #
