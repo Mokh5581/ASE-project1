@@ -22,22 +22,10 @@ def main():
     gdf_residents2  = m1.preprop_resid(df_residents, df_geodat_plz, pdict)  # Preprocessed population data
     df_reports = pd.read_csv(pdict["file_reports"], delimiter=";", encoding='utf-8')
     df_suggestions = pd.read_csv(pdict["file_suggestions"], delimiter=";", encoding='utf-8')
-    # try:
-    #     df_suggestions = pd.read_csv("./charging/infrastructure/repositories/suggestions.csv", delimiter=";", encoding='utf-8')
-    # except FileNotFoundError:
-    #     df_suggestions = pd.DataFrame(columns=["postal_code", "address", "comments"])
-    #     df_suggestions.to_csv("./charging/infrastructure/repositories/suggestions.csv", sep=";", index=False)
-    #
-    # try:
-    #      df_reports = pd.read_csv("./charging/infrastructure/repositories//malfunction_reports.csv", delimiter=";", encoding='utf-8')
-    # except FileNotFoundError:
-    #     df_reports = pd.DataFrame(columns=["station_name", "report_description"])
-    #     df_reports.to_csv("./charging/infrastructure/repositories/malfunction_reports.csv", sep=";", index=False)
-    # page = st.sidebar.selectbox("Choose a feature:", ["Home", "Search by Postal Code"])
+
     page = st.sidebar.selectbox("Choose a feature:",
                                 ["Home", "Search by Postal Code", "Submit Suggestions", "Report Malfunction",
                                  "View Suggestions", "View Malfunction Reports"])
-    # print(f'this is the column names {df_lstat2.columns}')
 
     if page == "Home":
         # Render home page content
