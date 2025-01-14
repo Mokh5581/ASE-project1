@@ -1,15 +1,11 @@
 # -----------------------------------------------------------------------------
 import os
-
 import src.presentation.Layout
-
 currentWorkingDirectory = os.path.dirname(os.path.abspath(__file__))
 os.chdir(currentWorkingDirectory)
 print("Current working directory\n" + os.getcwd())
 import pandas                        as pd
 from config                          import pdict
-import presentation.streamlit_app as pt
-import streamlit as st
 import shared.data_processing as m1
 import shared.helpers as ht
 
