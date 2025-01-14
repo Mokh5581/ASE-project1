@@ -1,5 +1,8 @@
 # -----------------------------------------------------------------------------
 import os
+
+import src.presentation.Layout
+
 currentWorkingDirectory = os.path.dirname(os.path.abspath(__file__))
 os.chdir(currentWorkingDirectory)
 print("Current working directory\n" + os.getcwd())
@@ -23,31 +26,8 @@ def main():
     df_reports = pd.read_csv(pdict["file_reports"], delimiter=";", encoding='utf-8')
     df_suggestions = pd.read_csv(pdict["file_suggestions"], delimiter=";", encoding='utf-8')
 
-    page = st.sidebar.selectbox("Choose a feature:",
-                                ["Home", "Search by Postal Code", "Submit Suggestions", "Report Malfunction",
-                                 "View Suggestions", "View Malfunction Reports"])
+    src.presentation.Layout.navigation_bar_layout(gdf_lstat3, gdf_residents2, df_lstat, df_suggestions, df_reports)
 
-    if page == "Home":
-        # Render home page content
-        m1.make_streamlit_electric_Charging_resid(gdf_lstat3, gdf_residents2)
-    elif page == "Search by Postal Code":
-        pt.render_search_page(df_lstat)
-    elif page == "Submit Suggestions":
-        pt.render_submit_suggestion_page(df_suggestions)
-    elif page == "Report Malfunction":
-        pt.render_malfunction_report_page(df_lstat, df_reports)
-    elif page == "View Suggestions":
-        pt.render_view_suggestions_page(df_suggestions)
-    elif page == "View Malfunction Reports":
-        pt.render_view_malfunction_reports_page(df_reports)
-    df_geodat_plz   = pd.read_csv(pdict["file_geodat_plz"], delimiter=";")
-    print("Geodata for Berlin loaded.")
-    print(df_geodat_plz)
-    print(df_lstat.head())
-    df_residents    = pd.read_csv(pdict["file_residents"])
-    gdf_residents2  = m1.preprop_resid(df_residents, df_geodat_plz, pdict)
-    print("Population data processed.")
-    print("Streamlit app running.")
 
 
 
